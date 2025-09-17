@@ -6,6 +6,9 @@ var xDirection = 0
 var facing = "down"
 var ySpeed = 300.0
 var yDirection = 0
+var coins = 0
+var health = 100
+var max_health = 100
 
 # TODO: Add health system variables
 # var health = ?
@@ -15,6 +18,7 @@ var yDirection = 0
 # var projectile_scene = preload("res://scenes/projectile.tscn")
 
 func _physics_process(_delta):
+	print ("Player Health: ", health)
 	# TODO: Get horizontal input (left/right keys)
 	# Input.get_axis checks two keys and gives us a number:
 	# - When LEFT is pressed: returns -1.0
@@ -75,6 +79,14 @@ func update_animation():
 
 # TODO: Create health change function for interactions
 func change_health(amount):
+	health += amount
+	print ("Health changed by: ", amount)
+	if health <1:
+		Die()
+	if health > max_health:
+		health=max_health
+	if health <= 0:
+		print ("Player died!")
 	# TODO: Add amount to health (positive = heal, negative = damage)
 	# TODO: Make sure health stays between 0 and maxHealth
 	# TODO: Print the new health value
@@ -104,3 +116,12 @@ func shoot():
 	# print("Shot projectile facing: ", facing)
 	
 	pass
+	
+	
+func change_coins(amount:int):
+	coins += amount
+	print ("you have_" + str(coins) + "coins")
+
+func Die():
+	print("the player has died")
+	queue_free()
