@@ -1,6 +1,7 @@
 extends CharacterBody2D
 @onready var _animation_player: AnimatedSprite2D = $AnimatedSprite2D
 
+const myProjectile = preload("res://scenes/coin.tscn")
 var xSpeed = 300.0
 var xDirection = 0
 var facing = "down"
@@ -9,6 +10,7 @@ var yDirection = 0
 var coins = 0
 var health = 100
 var max_health = 100
+var fireball = 10
 
 # TODO: Add health system variables
 # var health = ?
@@ -18,7 +20,6 @@ var max_health = 100
 # var projectile_scene = preload("res://scenes/projectile.tscn")
 
 func _physics_process(_delta):
-	print ("Player Health: ", health)
 	# TODO: Get horizontal input (left/right keys)
 	# Input.get_axis checks two keys and gives us a number:
 	# - When LEFT is pressed: returns -1.0
@@ -58,6 +59,8 @@ func _physics_process(_delta):
 	elif yDirection <0:
 		facing = "up"
 
+	if Input.is_action_just_pressed("ui_select"):
+		shoot()
 	
 	# TODO: Update animation based on facing direction
 	# Call your update_animation() function here
@@ -98,7 +101,11 @@ func change_health(amount):
 func shoot():
 	# TODO: Create a new projectile instance
 	# Look at the documentation examples in the lesson
+	print ("shot fired")
 	
+	var new_instance = MyProjectile.instantiate()
+	get_parent().add_child(new_instance)
+	#new_instance.velocity
 	
 	# TODO: Set projectile position to player position
 	# Look at the "Setting Object Position" example
@@ -117,6 +124,8 @@ func shoot():
 	
 	pass
 	
+func _on_timer_timeout():
+	print("Time to attack!")
 	
 func change_coins(amount:int):
 	coins += amount
@@ -125,3 +134,5 @@ func change_coins(amount:int):
 func Die():
 	print("the player has died")
 	queue_free()
+
+	
