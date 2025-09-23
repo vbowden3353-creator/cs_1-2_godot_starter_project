@@ -1,7 +1,8 @@
 extends CharacterBody2D
 @onready var _animation_player: AnimatedSprite2D = $AnimatedSprite2D
+const MyProjectile = preload("res://scenes/coin.tscn")
 
-const myProjectile = preload("res://scenes/coin.tscn")
+
 var xSpeed = 300.0
 var xDirection = 0
 var facing = "down"
@@ -101,11 +102,14 @@ func change_health(amount):
 func shoot():
 	# TODO: Create a new projectile instance
 	# Look at the documentation examples in the lesson
-	print ("shot fired")
-	
-	var new_instance = MyProjectile.instantiate()
-	get_parent().add_child(new_instance)
 	#new_instance.velocity
+	
+	print ("shot fired")
+	var new_instance = MyProjectile.instantiate()
+	new_instance.set_direction(facing)
+	get_parent().add_child(new_instance)
+	new_instance.global_position_ = position
+	
 	
 	# TODO: Set projectile position to player position
 	# Look at the "Setting Object Position" example
