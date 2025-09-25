@@ -1,6 +1,5 @@
-extends CharacterBody2D
+extends Area2D
 
-var _facing = 0
 var direction : Vector2
 var speed = 300
 var fireball_Speed = 300.0
@@ -31,7 +30,7 @@ func _physics_process(_delta):
 	pass
 
 # TODO: Create function to set projectile direction
-func set_direction(_direction_facing):
+func set_direction(_facing):
 	# TODO: Convert facing string to Vector2 direction
 	# Use if statements: "up" -> Vector2.UP, "down" -> Vector2.DOWN, etc.
 	# Set direction = the Vector2 result
@@ -40,9 +39,9 @@ func set_direction(_direction_facing):
 	if _facing == "down":
 		direction = Vector2(0,1)
 	if _facing == "left":
-		direction = Vector2(1,0)
-	if _facing == "right":
 		direction = Vector2(-1,0)
+	if _facing == "right":
+		direction = Vector2(1,0)
 	
 	
 	# TODO: Print the direction for debugging

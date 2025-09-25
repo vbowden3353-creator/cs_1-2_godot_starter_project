@@ -1,6 +1,6 @@
 extends CharacterBody2D
 @onready var _animation_player: AnimatedSprite2D = $AnimatedSprite2D
-const MyProjectile = preload("res://scenes/coin.tscn")
+const MyProjectile = preload("res://scenes/projectile.tscn")
 
 
 var xSpeed = 300.0
@@ -108,7 +108,7 @@ func shoot():
 	var new_instance = MyProjectile.instantiate()
 	new_instance.set_direction(facing)
 	get_parent().add_child(new_instance)
-	new_instance.global_position_ = position
+	new_instance.global_position = position -Vector2(0,25)
 	
 	
 	# TODO: Set projectile position to player position
