@@ -8,8 +8,10 @@ var facing = "down"
 var ySpeed = 300.0
 var yDirection = 0
 var coins = 0
+var is_attacking = false
+var attack_timer = .67
 @export var offset : Vector2 = Vector2(0, -25)
-
+@onready var melee_box: Area2D = 
 # TODO: Add health system variables
 var maxHealth = 10
 var health = maxHealth
@@ -38,12 +40,26 @@ func _physics_process(_delta):
 	# TODO: Update facing direction based on movement
 	if xDirection > 0:
 		facing = "right"
+		melee_box.position = Vector2(30, 0)
 	elif xDirection < 0:
 		facing = "left"
+		melee_box.position = Vector2(-30, 0)
 	elif yDirection < 0:
 		facing = "up"
+		melee_box.position = Vector2(0, -30)
 	elif yDirection > 0:
 		facing = "down"
+		melee_box.position = Vector2(0, 30)
+	
+	if Input.is_action_just_pressed("ui_accept"):
+		print("is_attacking")
+		is_attacking = true
+		
+	if is_attacking:
+		attack_timer = _delta
+	if attack_timer<0:
+		is_attacking  = false
+		attack_timer = .67
 	
 	if Input.is_action_just_pressed("ui_select"):
 		shoot()
@@ -102,3 +118,11 @@ func shoot():
 	get_tree().get_root().add_child(projectile_clone)
 
 	pass
+	
+func _on_melee_body_enter(body: Node2D) -> void:
+	
+	if body.is_in_group("enemy") and is_attacking:
+	
+		if body.name == "minotaur":
+			body.change_health(-1)
+			body.queue_free()
