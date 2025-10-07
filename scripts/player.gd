@@ -85,6 +85,7 @@ func change_coins(_amount:int):
 
 func die():
 	print("you died")
+	get_tree().reload_current_scene()
 	
 # TODO: Create shooting function
 func shoot():

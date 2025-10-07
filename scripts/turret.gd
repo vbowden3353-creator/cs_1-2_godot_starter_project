@@ -3,6 +3,10 @@ var projectile_original = preload("res://scenes/enemy_projectile.tscn")
 
 var Direction
 var facing
+var start_time = 2
+var timer = start_time
+var in_range = false
+var player
 @export var offset : Vector2 = Vector2(0, -25)
 
 func _ready():
@@ -10,7 +14,11 @@ func _ready():
 	pass
 
 func _process(_delta: float) -> void:
-	pass
+	if in_range:
+		timer -= _delta
+		if timer<0:
+			shoot(player)
+			timer = start_time
 
 
 	
@@ -19,12 +27,16 @@ func _process(_delta: float) -> void:
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	
 	if body.name == "Player":
-		shoot(body)
+		player = body
+		in_range = true
 	
 	pass # Replace with function body.
 
 
-func _on_area_2d_body_exited(_body: Node2D) -> void:
+func _on_area_2d_body_exited(body: Node2D) -> void:
+	if body.name == "Player":
+		player = body
+		in_range = false
 	pass # Replace with function body.
 
 func shoot(body):
