@@ -11,7 +11,10 @@ var coins = 0
 var is_attacking = false
 var attack_timer = .67
 @export var offset : Vector2 = Vector2(0, -25)
-@onready var melee_box: Area2D = 
+@onready var melee_box: Area2D = $Area2D2
+@onready var collision_shape_2d: CollisionShape2D = $Area2D2/CollisionShape2D
+var current_enemy
+var enemy = null
 # TODO: Add health system variables
 var maxHealth = 10
 var health = maxHealth
@@ -56,7 +59,7 @@ func _physics_process(_delta):
 		is_attacking = true
 		
 	if is_attacking:
-		attack_timer = _delta
+		attack_timer -= _delta
 	if attack_timer<0:
 		is_attacking  = false
 		attack_timer = .67
@@ -73,15 +76,17 @@ func _physics_process(_delta):
 
 # TODO: Create animation function (add this outside of _physics_process)
 func update_animation():
+	if is_attacking:
+		_animation_player.play("attack_" + facing)
+	else:
 	# TODO: Set the animation based on the facing direction
-	if velocity.is_zero_approx():
-		_animation_player.play("idle_" + facing)
+		if velocity.is_zero_approx():
+			_animation_player.play("idle_" + facing)
 	# This combines "idle_" with whatever direction we're facing
-		pass
-	elif !velocity.is_zero_approx():
+		
+		elif !velocity.is_zero_approx():
 		#walking animation here
-		_animation_player.play("walk_" + facing)
-		pass
+			_animation_player.play("walk_" + facing)
 		
 	
 
@@ -118,11 +123,21 @@ func shoot():
 	get_tree().get_root().add_child(projectile_clone)
 
 	pass
+
+		
+func _on_melee_body_exited(body: Node2D) -> void:
+	pass
+	if body.is_in_group("enemy"):
+		current_enemy = null
+		
+func _process(delta):
+	if enemy!=null and is_attacking:
+		enemy.change_health(-1)
+		enemy.queue_free
+
+
+func _on_area_2d_2_body_entered(body: Node2D) -> void:
+	print(body.name)
 	
-func _on_melee_body_enter(body: Node2D) -> void:
-	
-	if body.is_in_group("enemy") and is_attacking:
-	
-		if body.name == "minotaur":
-			body.change_health(-1)
-			body.queue_free()
+	if body.is_in_group("enemy"):
+		current_enemy = body
