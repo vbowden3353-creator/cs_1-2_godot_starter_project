@@ -63,6 +63,9 @@ func _physics_process(_delta):
 	if attack_timer<0:
 		is_attacking  = false
 		attack_timer = .67
+		
+	if current_enemy.has_meathod("change_health"):
+		print("has method")
 	
 	if Input.is_action_just_pressed("ui_select"):
 		shoot()
@@ -123,6 +126,7 @@ func shoot():
 	get_tree().get_root().add_child(projectile_clone)
 
 	pass
+
 
 		
 func _on_melee_body_exited(body: Node2D) -> void:
