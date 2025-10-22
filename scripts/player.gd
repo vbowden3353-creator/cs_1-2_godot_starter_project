@@ -64,8 +64,6 @@ func _physics_process(_delta):
 		is_attacking  = false
 		attack_timer = .67
 		
-	if current_enemy.has_meathod("change_health"):
-		print("has method")
 	
 	if Input.is_action_just_pressed("ui_select"):
 		shoot()

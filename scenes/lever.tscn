@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqwd7uptu4bbq"]
+[gd_scene load_steps=8 format=3 uid="uid://bqwd7uptu4bbq"]
 
 [ext_resource type="Texture2D" uid="uid://bl5vm2j0n6sxa" path="res://sprites/items/ALever.png" id="1_iorl1"]
+[ext_resource type="Script" uid="uid://bioxff6nk4dmj" path="res://scripts/switch.gd" id="1_ncfea"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1kcve"]
 size = Vector2(58, 27)
@@ -32,16 +33,29 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_qxmkn"]
+radius = 34.234486
+
 [node name="Lever" type="Area2D"]
 scale = Vector2(0.5, 0.5)
+script = ExtResource("1_ncfea")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_1kcve")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(-42, -66)
+position = Vector2(-40, -66)
 sprite_frames = SubResource("SpriteFrames_3d23c")
-animation = &"off"
+animation = &"on"
 centered = false
 offset = Vector2(12, 0)
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -16)
+shape = SubResource("CircleShape2D_qxmkn")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
