@@ -1,6 +1,7 @@
 extends CharacterBody2D
 @onready var _animation_player: AnimatedSprite2D = $AnimatedSprite2D
 var projectile_original = preload("res://scenes/projectile.tscn")
+const coin = preload("uid://c7ppmxv7gcxjl")
 
 var xSpeed = 300.0
 var xDirection = 0
@@ -18,6 +19,12 @@ var enemy = null
 # TODO: Add health system variables
 var maxHealth = 10
 var health = maxHealth
+
+var lever = false
+var lever2 = false
+var lever3 = false
+var creating_coin = false
+var offset2 = Vector2(100,100)
 
 func _ready() -> void:
 	pass
@@ -63,7 +70,14 @@ func _physics_process(_delta):
 	if attack_timer<0:
 		is_attacking  = false
 		attack_timer = .67
+	
+	if lever and !lever2 and lever3 and !creating_coin:
+		print("puzzle solved")
 		
+		var coin_clone = coin.instantiate()
+		coin_clone.global_poition = position + offset2
+		get_tree().get_root().add_child(coin_clone)
+		creating_coin = true
 	
 	if Input.is_action_just_pressed("ui_select"):
 		shoot()
