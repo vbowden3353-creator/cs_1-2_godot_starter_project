@@ -72,7 +72,7 @@ func _physics_process(_delta):
 		attack_timer = .67
 	
 	if lever and !lever2 and lever3 and !creating_coin:
-		print("puzzle solved")
+		print("puzzle solved!")
 		
 		var coin_clone = coin.instantiate()
 		coin_clone.global_poition = position + offset2
