@@ -877,7 +877,7 @@ autoplay = "idle_down"
 position = Vector2(0, -12)
 shape = SubResource("CircleShape2D_ptgn0")
 
-[node name="Area2D2" type="Area2D" parent="."]
+[node name="Area2D2" type="Area2D" parent="." groups=["player"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
 shape = SubResource("RectangleShape2D_qhqgy")

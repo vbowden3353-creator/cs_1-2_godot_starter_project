@@ -1,6 +1,7 @@
-[gd_scene load_steps=129 format=3 uid="uid://ddq1bkyn8j1by"]
+[gd_scene load_steps=133 format=3 uid="uid://ddq1bkyn8j1by"]
 
 [ext_resource type="Texture2D" uid="uid://busa5myjbwb4i" path="res://sprites/Download38899.png" id="1_nohjn"]
+[ext_resource type="Script" uid="uid://di404qslpnp8m" path="res://scenes/melee_minotaur.gd" id="1_vltjp"]
 [ext_resource type="Texture2D" uid="uid://dqoamfql4kdnq" path="res://sprites/Download19204.png" id="2_7o3s3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dgyv5"]
@@ -999,9 +1000,21 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_xl86w"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vltjp"]
+radius = 16.0
+height = 88.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vltjp"]
+radius = 63.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_adppo"]
+radius = 150.81445
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uk8e4"]
+radius = 213.00235
 
 [node name="MeleeMinotaur" type="CharacterBody2D" groups=["enemy"]]
+script = ExtResource("1_vltjp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xx5td")
@@ -1011,7 +1024,21 @@ frame = 7
 frame_progress = 0.985295
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 9.5)
+position = Vector2(1, 4)
 scale = Vector2(0.5, 0.5)
-shape = SubResource("CircleShape2D_xl86w")
-disabled = true
+shape = SubResource("CapsuleShape2D_vltjp")
+
+[node name="melee" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="melee"]
+shape = SubResource("CircleShape2D_vltjp")
+
+[node name="chase" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="chase"]
+shape = SubResource("CircleShape2D_adppo")
+
+[node name="ranged" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ranged"]
+shape = SubResource("CircleShape2D_uk8e4")

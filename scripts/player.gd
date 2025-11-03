@@ -64,6 +64,7 @@ func _physics_process(_delta):
 	if Input.is_action_just_pressed("ui_accept"):
 		print("is_attacking")
 		is_attacking = true
+		attack_timer = .67
 		
 	if is_attacking:
 		attack_timer -= _delta
@@ -75,7 +76,7 @@ func _physics_process(_delta):
 		print("puzzle solved!")
 		
 		var coin_clone = coin.instantiate()
-		coin_clone.global_poition = position + offset2
+		coin_clone.global_position = position + offset2
 		get_tree().get_root().add_child(coin_clone)
 		creating_coin = true
 	
@@ -147,13 +148,12 @@ func _on_melee_body_exited(body: Node2D) -> void:
 		current_enemy = null
 		
 func _process(delta):
-	if enemy!=null and is_attacking:
-		enemy.change_health(-1)
-		enemy.queue_free
+	if current_enemy!=null and is_attacking:
+		current_enemy.queue_free() 
+		print("kill_enemy")
 
 
-func _on_area_2d_2_body_entered(body: Node2D) -> void:
-	print(body.name)
-	
+func _on_area_2d_2_body_entered(body: Node2D):
 	if body.is_in_group("enemy"):
 		current_enemy = body
+		print(body.name)
