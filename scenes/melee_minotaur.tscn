@@ -1016,7 +1016,7 @@ radius = 213.00235
 [node name="MeleeMinotaur" type="CharacterBody2D" groups=["enemy"]]
 script = ExtResource("1_vltjp")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="minotaur animation" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xx5td")
 animation = &"crossbow_shoot_right"
 autoplay = "crossbow_shoot_right"
