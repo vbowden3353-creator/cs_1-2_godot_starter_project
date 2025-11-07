@@ -8,41 +8,52 @@ var speed = 200.0
 var health = 3
 var facing
 var direction = 0
-var timer = start_time
 var start_time = 3
+var timer = start_time
+var xDirection = 0
+var yDirection = 0
 @onready var player: CharacterBody2D = %Player
 @onready var minotaur_animation: AnimatedSprite2D = $"minotaur animation"
+@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
 
 func _ready():
 	pass
 	
 func _process(delta):
-	if in_range:
-		pass
 	
-	elif chasing and !attacking:
+	if player != null:
+		if player.position.x < position.x:
+			facing = "left"
+			minotaur_animation.flip_h = true
+		else:
+			facing = "right"
+			minotaur_animation.flip_h = false
+	
+	timer -= delta
+	if in_range:
+		if timer < 0:
+			shoot(player)
+			timer = start_time
+	
+	elif chasing :
 		velocity = Vector2.ZERO
 		direction = position.direction_to(player.position)
+		position += direction * speed * delta
 		
-	elif !chasing and !attacking:
+	elif attacking:
 		pass
 	
-	if chasing == true:
-		position += direction * delta * speed
+	#if xDirection > 0:
+		#facing = "right"
+	#elif xDirection < 0:
+		#facing = "left"
+#	elif yDirection < 0:
+		#facing = "up"
+	#elif yDirection > 0:
+		#facing = "down"
+
 	
-	if in_range:
-		timer -= delta
-		
-	if timer < 0:
-		shoot(player)
-		timer = start_time
-		
-	if position.x > 0:
-		facing = "right"
-		
-	elif position.x < 0:
-		facing = "left"
 
 func update_animation():
 	pass
@@ -50,10 +61,11 @@ func update_animation():
 		minotaur_animation.play("attack_right")
 		print("minotaur attacking")
 	elif chasing:
-		minotaur_animation.play("attack_")
+		minotaur_animation.play("crossbow_walk_" + direction)
 		
 	elif in_range:
-		minotaur_animation.play("crossbow_")
+		minotaur_animation.play("crossbow_shoot")
+		
 
 func _on_melee_body_entered(body):
 	if body.name == "Player":
@@ -63,6 +75,7 @@ func _on_melee_body_entered(body):
 func _on_melee_body_exited(body):
 	if body.name == "Player":
 		attacking = false
+		chasing = true
 		
 func _on_chase_body_entered(body):
 	if body.name == "Player":
@@ -76,9 +89,9 @@ func _on_chase_body_exited(body):
 		
 func _on_ranged_body_entered(body):
 	if body.name == "Player":
+		player = body
 		in_range = true
-	if in_range:
-		shoot(player)
+	
 	
 func _on_ranged_body_exited(body):
 	if body.name == "Player":

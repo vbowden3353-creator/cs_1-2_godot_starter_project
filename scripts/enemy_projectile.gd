@@ -21,7 +21,7 @@ func _physics_process(_delta):
 func set_direction(target):
 	direction = position.direction_to(target)
 	if direction.x <0: print("togge to the left")
-	scale.x = -1
+	scale.x *= -1
 	
 func shoot(body):
 	# TODO: Create a new projectile instance
