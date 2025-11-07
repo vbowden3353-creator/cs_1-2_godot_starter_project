@@ -8,6 +8,8 @@ var speed = 200.0
 var health = 3
 var facing
 var direction = 0
+var timer = start_time
+var start_time = 3
 @onready var player: CharacterBody2D = %Player
 @onready var minotaur_animation: AnimatedSprite2D = $"minotaur animation"
 
@@ -27,22 +29,31 @@ func _process(delta):
 		pass
 	
 	if chasing == true:
-		position += direction * speed * delta
+		position += direction * delta * speed
+	
+	if in_range:
+		timer -= delta
+		
+	if timer < 0:
+		shoot(player)
+		timer = start_time
+		
+	if position.x > 0:
+		facing = "right"
+		
+	elif position.x < 0:
+		facing = "left"
 
 func update_animation():
 	pass
 	if attacking:
 		minotaur_animation.play("attack_right")
 		print("minotaur attacking")
-	else:
-	# TODO: Set the animation based on the facing direction
-		if velocity.is_zero_approx():
-			minotaur_animation.play("idle_" + facing)
-	# This combines "idle_" with whatever direction we're facing
+	elif chasing:
+		minotaur_animation.play("attack_")
 		
-		elif !velocity.is_zero_approx():
-		#walking animation here
-			minotaur_animation.play("walk_" + facing)
+	elif in_range:
+		minotaur_animation.play("crossbow_")
 
 func _on_melee_body_entered(body):
 	if body.name == "Player":
