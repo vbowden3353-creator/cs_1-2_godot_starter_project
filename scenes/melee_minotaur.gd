@@ -4,14 +4,18 @@ var projectile_original = preload("res://scenes/enemy_arrow.tscn")
 var in_range = false
 var chasing = false
 var attacking = false
-var speed = 200.0
+var speed = 100.0
 var health = 3
-var facing
+var facing = "up"
 var direction = 0
 var start_time = 3
 var timer = start_time
 var xDirection = 0
 var yDirection = 0
+var start_attack_timer = 0.67
+var melee_range
+var attack_timer = start_attack_timer
+var melee
 @onready var player: CharacterBody2D = %Player
 @onready var minotaur_animation: AnimatedSprite2D = $"minotaur animation"
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
@@ -23,48 +27,51 @@ func _ready():
 func _process(delta):
 	
 	if player != null:
-		if player.position.x < position.x:
-			facing = "left"
-			minotaur_animation.flip_h = true
-		else:
-			facing = "right"
-			minotaur_animation.flip_h = false
-	
-	timer -= delta
-	if in_range:
-		if timer < 0:
-			shoot(player)
-			timer = start_time
-	
-	elif chasing :
-		velocity = Vector2.ZERO
-		direction = position.direction_to(player.position)
-		position += direction * speed * delta
 		
-	elif attacking:
-		pass
 	
-	#if xDirection > 0:
-		#facing = "right"
-	#elif xDirection < 0:
-		#facing = "left"
-#	elif yDirection < 0:
-		#facing = "up"
-	#elif yDirection > 0:
-		#facing = "down"
-
+		timer -= delta
+		if in_range:
+			if timer < 0:
+				shoot(player)
+				timer = start_time
+		
+		elif chasing :
+			velocity = Vector2.ZERO
+			direction = position.direction_to(player.position)
+			position += direction * speed * delta
+			
+		elif attacking:
+			pass
 	
+		if abs (position.x - player.position.x) > abs (position.y - player.position.y):
+			if position.x > player.position.x:
+				facing = "right"
+			else:
+				facing = "left"
+		else:		
+			if position.y > player.position.y:
+				facing = "up"
+			else:
+				facing = "down"
+		if !attacking and !in_range and !chasing:
+			minotaur_animation.play("idle_" + facing)
+		
+		if melee_range:
+			if attack_timer <0:
+				melee = false
+				minotaur_animation.play("attack_" + facing)
+				attack_timer = start_attack_timer
 
 func update_animation():
 	pass
 	if attacking:
-		minotaur_animation.play("attack_right")
+		minotaur_animation.play("attack_" + facing)
 		print("minotaur attacking")
 	elif chasing:
-		minotaur_animation.play("crossbow_walk_" + direction)
+		minotaur_animation.play("crossbow_walk_" + facing)
 		
 	elif in_range:
-		minotaur_animation.play("crossbow_shoot")
+		minotaur_animation.play("crossbow_shoot_" + facing)
 		
 
 func _on_melee_body_entered(body):
