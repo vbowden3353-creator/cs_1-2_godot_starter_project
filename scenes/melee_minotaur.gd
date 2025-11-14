@@ -16,6 +16,8 @@ var start_attack_timer = 0.67
 var melee_range
 var attack_timer = start_attack_timer
 var melee
+var current_player
+
 @onready var player: CharacterBody2D = %Player
 @onready var minotaur_animation: AnimatedSprite2D = $"minotaur animation"
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
@@ -41,8 +43,18 @@ func _process(delta):
 			position += direction * speed * delta
 			
 		elif attacking:
-			pass
-	
+			attack_timer -= delta
+			if attack_timer <0:
+				melee = false
+				minotaur_animation.play("attack_" + facing)
+				attack_timer = start_attack_timer
+			if player != null:
+				if player.has_method("change_health"):
+					player.change_health(-1)
+					print("has method")
+				
+
+		
 		if abs (position.x - player.position.x) > abs (position.y - player.position.y):
 			if position.x > player.position.x:
 				facing = "right"
@@ -55,12 +67,9 @@ func _process(delta):
 				facing = "down"
 		if !attacking and !in_range and !chasing:
 			minotaur_animation.play("idle_" + facing)
-		
-		if melee_range:
-			if attack_timer <0:
-				melee = false
-				minotaur_animation.play("attack_" + facing)
-				attack_timer = start_attack_timer
+			
+	
+		update_animation()
 
 func update_animation():
 	pass
@@ -68,16 +77,24 @@ func update_animation():
 		minotaur_animation.play("attack_" + facing)
 		print("minotaur attacking")
 	elif chasing:
-		minotaur_animation.play("crossbow_walk_" + facing)
+		minotaur_animation.play("walk_" + facing)
+		print("minotaur chasing")
+		pass
 		
 	elif in_range:
 		minotaur_animation.play("crossbow_shoot_" + facing)
+		print("minotaur shooting")
+		pass
 		
+	if !attacking and !in_range and !chasing:
+		minotaur_animation.play("crossbow_idle_" + facing)
+
 
 func _on_melee_body_entered(body):
 	if body.name == "Player":
 		attacking = true
 		chasing = false
+
 		
 func _on_melee_body_exited(body):
 	if body.name == "Player":
@@ -96,8 +113,14 @@ func _on_chase_body_exited(body):
 		
 func _on_ranged_body_entered(body):
 	if body.name == "Player":
-		player = body
 		in_range = true
+	if in_range:
+		shoot(player)
+	if in_range:
+		if player.position.x < position.x:
+			minotaur_animation.flip_h = true
+		else:
+			minotaur_animation.flip_h = false
 	
 	
 func _on_ranged_body_exited(body):

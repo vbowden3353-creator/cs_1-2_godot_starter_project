@@ -25,11 +25,14 @@ var lever2 = false
 var lever3 = false
 var creating_coin = false
 var offset2 = Vector2(100,100)
+var iframes = 1
+var iframes_timer = iframes
 
 func _ready() -> void:
 	pass
 
 func _physics_process(_delta):
+	iframes_timer -= _delta
 	# TODO: Get horizontal input (left/right keys)
 	# Input.get_axis checks two keys and gives us a number:
 	# - When LEFT is pressed: returns -1.0
@@ -82,6 +85,8 @@ func _physics_process(_delta):
 	
 	if Input.is_action_just_pressed("ui_select"):
 		shoot()
+		
+	
 	
 	# call the animation function
 	update_animation()
@@ -109,7 +114,9 @@ func update_animation():
 
 # TODO: Create health change function for interactions
 func change_health(_amount:int):
+	if iframes_timer <0:
 		health += _amount
+		iframes_timer = iframes
 		if health < 1:
 			die()
 		if health > maxHealth:
