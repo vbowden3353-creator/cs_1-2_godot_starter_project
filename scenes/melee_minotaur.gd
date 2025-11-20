@@ -54,7 +54,7 @@ func _process(delta):
 					print("has method")
 				
 
-	
+	 
 		if abs (position.x - player.position.x) > abs (position.y - player.position.y):
 			if position.x > player.position.x:
 				facing = "right"
